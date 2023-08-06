@@ -47,7 +47,7 @@ const updateUserById = async (id, user) => {
         const userFound = await User.findByPk(id);
         if (userFound) {
             const userResponse = await User.update(user, {
-                where: { id: id }
+                where: { id }
             });
             return userResponse;            
         } else {
@@ -59,4 +59,21 @@ const updateUserById = async (id, user) => {
     }
 }
 
-module.exports = { createUser, findAll, findUserById, updateUserById }
+const deleteUserById = async (id) => {
+    try {
+        const userFound = await User.findByPk(id);
+        if (userFound) {
+            const userResponse = await User.destroy({
+                where: { id }
+            });
+            return [userResponse, userFound];            
+        } else {
+            return { message: 'Usuario no Encontrado' };
+        }
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+module.exports = { createUser, findAll, findUserById, updateUserById, deleteUserById }

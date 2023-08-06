@@ -5,12 +5,14 @@ const PORT = process.env.PORT;
 const { StatusCodes } = require('http-status-codes');
 
 // IMPORTAR CONTROLADORES
-const { createUser, findAll, findUserById, updateUserById} = require('./app/controllers/user.controller');
+const { createUser, findAll, findUserById, updateUserById, deleteUserById} = require('./app/controllers/user.controller');
 
-// MIDDELWARES
+// MIDDELEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+//  http://localhost:3000
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
@@ -81,12 +83,35 @@ app.put('/user/:id', async (req, res) => {
         } else {
             obj = { message: `Usuario con id ${id}. No fue actualizado`};
         }
-        res.status(StatusCodes.CREATED).json(obj);
+        res.status((obj['data']) ? StatusCodes.CREATED : StatusCodes.BAD_REQUEST).json(obj);
       }
     } else {
       res.status(StatusCodes.BAD_REQUEST)
       .json({ message: `Query Params de Entrada, Insufucientes (first_name, last_name, email)` });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
+})
+
+// http://localhost:3000/user/:id
+app.delete('/user/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const userDelete = await deleteUserById(id);
+      if (userDelete.message) {
+        res.status(StatusCodes.NOT_FOUND).json(userDelete);
+      } else {
+        console.log(userDelete)
+        let obj
+        if (userDelete[0] == 1){
+            obj = { message: `Usuario con id ${id}, efectivamente Eliminado`, data: userDelete[1]};
+        } else {
+            obj = { message: `Usuario con id ${id}. No fue Eliminado`};
+        }
+        res.status((obj['data']) ? StatusCodes.OK : StatusCodes.BAD_REQUEST).json(obj);
+      }
   } catch (error) {
     console.log(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
