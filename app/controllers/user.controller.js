@@ -33,15 +33,30 @@ const findUserById = async (id) => {
             console.log(`Se ha encontrado el usuario ${JSON.stringify(user, null, 4)}`);
             return user;
         } else {
-            console.log(`Se ha encontrado el usuario ${JSON.stringify(user, null, 4)}`);
-            return {message: 'Usuario no Encontrado'};
+            console.log(`No Se ha encontrado el usuario con id ${id}`);
+            return { message: 'Usuario no Encontrado' };
         }
     } catch (error) {
         console.error(error);
         throw error;
     }
 }
-    
 
+const updateUserById = async (id, user) => {
+    try {
+        const userFound = await User.findByPk(id);
+        if (userFound) {
+            const userResponse = await User.update(user, {
+                where: { id: id }
+            });
+            return userResponse;            
+        } else {
+            return { message: 'Usuario no Encontrado' };
+        }
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
-module.exports = { createUser, findAll, findUserById }
+module.exports = { createUser, findAll, findUserById, updateUserById }
