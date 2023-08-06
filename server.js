@@ -4,8 +4,35 @@ require('dotenv').config();
 const PORT = process.env.PORT;
 const { StatusCodes } = require('http-status-codes');
 
+// IMPORTAR CONTROLADORES
+const { createUser } = require('./app/controllers/user.controller');
+
+// MIDDELWARES
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+
+
+//  http://localhost:3000/user?first_name=Sixto&last_name=Guerra&email=sixto.guerra1982@gmail.com
+app.post('/user/', async (req, res) => {
+  try {
+    if (req.query.first_name && req.query.last_name && req.query.email) {
+      const user = await createUser(req.query);
+      res.status(StatusCodes.CREATED).json({
+        message: `usuario ${user.email} fue creado con éxito`,
+        user
+      });
+    } else {
+      res.status(StatusCodes.BAD_REQUEST)
+        .json({ message: `Query Params de Entrada, Insufucientes (first_name, last_name, email )` });
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
 });
 
 app.all('*', (req, res) => {
