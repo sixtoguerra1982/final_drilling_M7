@@ -26,4 +26,22 @@ const findAll = async () => {
     }
 }
 
-module.exports = { createUser, findAll }
+const findUserById = async (id) => {
+    try {
+        const user = await User.findByPk(id);
+        if (user) {
+            console.log(`Se ha encontrado el usuario ${JSON.stringify(user, null, 4)}`);
+            return user;
+        } else {
+            console.log(`Se ha encontrado el usuario ${JSON.stringify(user, null, 4)}`);
+            return {message: 'Usuario no Encontrado'};
+        }
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+    
+
+
+module.exports = { createUser, findAll, findUserById }
