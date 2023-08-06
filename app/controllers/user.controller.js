@@ -17,7 +17,7 @@ const createUser = async (user) => {
 
 const findAll = async () => {
     try {
-        const allUsers = await User.findAll();
+        const allUsers = await User.findAll({order: ['id']});
         console.log(`Se han encontrado los usuarios ${JSON.stringify(allUsers, null, 4)}`);
         return allUsers;
     } catch (error) {
