@@ -3,7 +3,7 @@ const sequelize = require('../config/db.config');
 
 
  const load_user = async () => {
-    console.log('*********CREANDO SEED USER*********')
+    console.log('*********CREANDO SEED USER*********');
     await User.create({firstName: 'Mateo', lastName: 'Díaz', email: 'mateo.diaz@correo.com'});
     await User.create({firstName: 'Santiago', lastName: 'Mejías', email: 'santiago.mejias@correo.com'});
     await User.create({firstName: 'Lucas', lastName: 'Rojas', email: 'lucas.rojas@correo.com'});
