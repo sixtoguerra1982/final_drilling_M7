@@ -5,7 +5,7 @@ const PORT = process.env.PORT;
 const { StatusCodes } = require('http-status-codes');
 
 // IMPORTAR CONTROLADORES
-const { createUser } = require('./app/controllers/user.controller');
+const { createUser, findAll } = require('./app/controllers/user.controller');
 
 // MIDDELWARES
 app.use(express.json());
@@ -14,7 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
-
 
 //  http://localhost:3000/user?first_name=Sixto&last_name=Guerra&email=sixto.guerra1982@gmail.com
 app.post('/user/', async (req, res) => {
@@ -35,10 +34,21 @@ app.post('/user/', async (req, res) => {
   }
 });
 
+// http://localhost:3000/users/
+app.get('/users/', async (req, res) => {
+  try {
+    const users = await findAll();
+    res.json(users)
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
+})
+
 app.all('*', (req, res) => {
   res.status(StatusCodes.NOT_FOUND).send("Ruta desconocida.");
 });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`)
+  console.log(`App listening on port ${PORT}`);
 });

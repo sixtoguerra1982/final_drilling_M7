@@ -15,4 +15,14 @@ const createUser = async (user) => {
     }
 }
 
-module.exports = { createUser }
+const findAll = async () => {
+    try {
+        const allUsers = await User.findAll();
+        return allUsers;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+module.exports = { createUser, findAll }
