@@ -4,7 +4,10 @@
   "description": "Prueba Final Modulo 7",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "./node_modules/.bin/nodemon",
+    "sync-db": "node ./app/scripts/createTables.js"
   },
   "author": "Sixto Guerra U.-",
   "license": "ISC",
@@ -15,5 +18,8 @@
     "pg": "^8.11.2",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.32.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
