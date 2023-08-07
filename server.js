@@ -6,7 +6,7 @@ const { StatusCodes } = require('http-status-codes');
 
 // IMPORTAR CONTROLADORES
 const { createUser, findAll, findUserById, updateUserById, deleteUserById } = require('./app/controllers/user.controller');
-const { createBootcamp } = require('./app/controllers/bootcamp.controller');
+const { createBootcamp, findById } = require('./app/controllers/bootcamp.controller');
 // MIDDELEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -118,7 +118,7 @@ app.delete('/user/:id', async (req, res) => {
   }
 })
 
-//  http://localhost:3000/user?first_name=Sixto&last_name=Guerra&email=sixto.guerra1982@gmail.com
+//  http://localhost:3000/bootcamp?title=JS27&cue=100&description=HTML, CCS, JS , POSTGRESQL
 app.post('/bootcamp/', async (req, res) => {
   try {
     if (req.query.title && req.query.cue && req.query.description) {
@@ -136,6 +136,22 @@ app.post('/bootcamp/', async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 });
+
+
+// http://localhost:3000/bootcamp/:id
+app.get('/bootcamp/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const user = await findById(id);
+    res.status((user.message) ? StatusCodes.NOT_FOUND : StatusCodes.OK ).json(user);
+
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
+}
+);
+
 
 
 app.all('*', (req, res) => {

@@ -15,4 +15,20 @@ const createBootcamp = async (bootcamp) => {
     }
 }
 
-module.exports = { createBootcamp }
+const findById = async (id) => {
+    try {
+        const bootcampResponse = await Bootcamp.findByPk(id);
+        if (bootcampResponse) {
+            console.log(`Se ha encontrado el Bootcamp ${JSON.stringify(bootcampResponse, null, 4)}`);
+            return bootcampResponse;
+        } else {
+            console.log(`No Se ha encontrado el Bootcamp con id ${id}`);
+            return { message: 'Bootcamp no Encontrado' };
+        }
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+module.exports = { createBootcamp, findById }
