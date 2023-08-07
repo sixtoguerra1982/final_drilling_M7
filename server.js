@@ -6,7 +6,7 @@ const { StatusCodes } = require('http-status-codes');
 
 // IMPORTAR CONTROLADORES
 const { createUser, findAll, findUserById, updateUserById, deleteUserById } = require('./app/controllers/user.controller');
-const { createBootcamp, findById, findAllBootcamp } = require('./app/controllers/bootcamp.controller');
+const { createBootcamp, findById, findAllBootcamp, addUser } = require('./app/controllers/bootcamp.controller');
 // MIDDELEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -163,6 +163,28 @@ app.get('/bootcamps/', async (req, res) => {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 })
+
+// 
+app.post('/bootcamp/adduser/idbootcamp/:idBootcamp/iduser/:idUser', async (req, res) => {
+  const idBootcamp = Number(req.params.idBootcamp);
+  const idUser = Number(req.params.idUser); 
+  try {
+      const bootcamp = await addUser(idBootcamp, idUser);
+      if (bootcamp) {
+        res.status(StatusCodes.CREATED).json({ 
+            message: `Se agregó usuario id ${idUser} al bootcamp id ${idBootcamp}`,
+            user: bootcamp[1],
+            bootcamp: bootcamp[0]
+        });
+      } else {
+        res.status(StatusCodes.BAD_REQUEST).json({message: 'Usuario o Bootcamp No encontrado!'});
+      }
+  } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
+});
+
+
 
 app.all('*', (req, res) => {
   res.status(StatusCodes.NOT_FOUND).send("Ruta desconocida.");

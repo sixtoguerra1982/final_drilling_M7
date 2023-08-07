@@ -1,5 +1,7 @@
-const User = require('../models/user.model');
-const Bootcamp = require('../models/bootcamp.model');
+const { 
+    Bootcamp,
+    User 
+} = require('../models');
 const sequelize = require('../config/db.config');
 
 

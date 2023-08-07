@@ -1,4 +1,7 @@
-const User = require('../models/user.model');
+const { 
+    Bootcamp,
+    User 
+} = require('../models');
 
 const createUser = async (user) => {
     try {

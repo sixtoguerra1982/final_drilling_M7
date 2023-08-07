@@ -1,4 +1,8 @@
-const Bootcamp = require('../models/bootcamp.model');
+const { 
+    Bootcamp,
+    User 
+} = require('../models');
+
 
 const createBootcamp = async (bootcamp) => {
     try {
@@ -43,4 +47,25 @@ const findAllBootcamp = async () => {
     }
 }
 
-module.exports = { createBootcamp, findById, findAllBootcamp }
+const addUser = async (bootcampId, userId) => {
+    try {
+        const bootcamp = await Bootcamp.findByPk(bootcampId);
+        if (!bootcamp) {
+            console.log(`No se encontró bootcamp con id ${bootcampId}`);
+            return null;
+        }
+        const user = await User.findByPk(userId);
+        if (!user) {
+            console.log(`No se encontró usuario con id ${userId}`);
+            return null;
+        }
+        await bootcamp.addUser(user);
+        console.log(`Agredado el usuario id ${user.id} al bootcamp con id ${bootcamp.id}`);
+        return [bootcamp, user];
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+module.exports = { createBootcamp, findById, findAllBootcamp , addUser }
