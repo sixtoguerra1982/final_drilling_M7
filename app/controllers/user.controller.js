@@ -20,7 +20,18 @@ const createUser = async (user) => {
 
 const findAll = async () => {
     try {
-        const allUsers = await User.findAll({order: ['id']});
+        const allUsers = await User.findAll({order: ['id'], 
+            include: [
+                {
+                    model: Bootcamp,
+                    as: 'bootcamp',
+                    attributes: ['id', 'title'],
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
+        });
         console.log(`Se han encontrado los usuarios ${JSON.stringify(allUsers, null, 4)}`);
         return allUsers;
     } catch (error) {
@@ -31,7 +42,16 @@ const findAll = async () => {
 
 const findUserById = async (id) => {
     try {
-        const user = await User.findByPk(id);
+        const user = await User.findByPk(id,{include: [
+            {
+                model: Bootcamp,
+                as: 'bootcamp',
+                attributes: ['id', 'title'],
+                through: {
+                    attributes: []
+                }
+            }
+        ]});
         if (user) {
             console.log(`Se ha encontrado el usuario ${JSON.stringify(user, null, 4)}`);
             return user;

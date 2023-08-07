@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+//  -> CREATE USER <-
 //  http://localhost:3000/user?first_name=Sixto&last_name=Guerra&email=sixto.guerra1982@gmail.com
 app.post('/user/', async (req, res) => {
   try {
@@ -36,6 +37,7 @@ app.post('/user/', async (req, res) => {
   }
 });
 
+//  -> INDEX USERS <-
 // http://localhost:3000/users/
 app.get('/users/', async (req, res) => {
   try {
@@ -164,7 +166,7 @@ app.get('/bootcamps/', async (req, res) => {
   }
 })
 
-// 
+// http://localhost:3000/bootcamp/adduser/idbootcamp/1/iduser/2
 app.post('/bootcamp/adduser/idbootcamp/:idBootcamp/iduser/:idUser', async (req, res) => {
   const idBootcamp = Number(req.params.idBootcamp);
   const idUser = Number(req.params.idUser); 

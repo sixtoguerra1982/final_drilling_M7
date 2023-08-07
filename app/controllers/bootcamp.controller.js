@@ -21,7 +21,16 @@ const createBootcamp = async (bootcamp) => {
 
 const findById = async (id) => {
     try {
-        const bootcampResponse = await Bootcamp.findByPk(id);
+        const bootcampResponse = await Bootcamp.findByPk(id, {include: [
+            {
+                model: User,
+                as: 'user',
+                attributes: ['id', 'first_name', 'last_name', 'email'],
+                through: {
+                    attributes: []
+                }
+            }
+        ]});
         if (bootcampResponse) {
             console.log(`Se ha encontrado el Bootcamp ${JSON.stringify(bootcampResponse, null, 4)}`);
             return bootcampResponse;
@@ -38,7 +47,16 @@ const findById = async (id) => {
 
 const findAllBootcamp = async () => {
     try {
-        const bootcamps = await Bootcamp.findAll({order: ['id']});
+        const bootcamps = await Bootcamp.findAll({order: ['id'], include: [
+            {
+                model: User,
+                as: 'user',
+                attributes: ['id', 'first_name', 'last_name', 'email'],
+                through: {
+                    attributes: []
+                }
+            }
+        ]});
         console.log(`Se han encontrado Bootcamps ${JSON.stringify(bootcamps, null, 4)}`);
         return bootcamps;
     } catch (error) {
