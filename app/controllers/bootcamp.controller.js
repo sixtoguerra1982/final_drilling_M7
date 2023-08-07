@@ -31,4 +31,16 @@ const findById = async (id) => {
     }
 }
 
-module.exports = { createBootcamp, findById }
+
+const findAllBootcamp = async () => {
+    try {
+        const bootcamps = await Bootcamp.findAll({order: ['id']});
+        console.log(`Se han encontrado Bootcamps ${JSON.stringify(bootcamps, null, 4)}`);
+        return bootcamps;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+module.exports = { createBootcamp, findById, findAllBootcamp }

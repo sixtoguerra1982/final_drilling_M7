@@ -6,7 +6,7 @@ const { StatusCodes } = require('http-status-codes');
 
 // IMPORTAR CONTROLADORES
 const { createUser, findAll, findUserById, updateUserById, deleteUserById } = require('./app/controllers/user.controller');
-const { createBootcamp, findById } = require('./app/controllers/bootcamp.controller');
+const { createBootcamp, findById, findAllBootcamp } = require('./app/controllers/bootcamp.controller');
 // MIDDELEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -153,6 +153,16 @@ app.get('/bootcamp/:id', async (req, res) => {
 );
 
 
+// http://localhost:3000/bootcamps
+app.get('/bootcamps/', async (req, res) => {
+  try {
+    const bootcamps = await findAllBootcamp();
+    res.json(bootcamps)
+  } catch (error) {
+    console.log(error)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+  }
+})
 
 app.all('*', (req, res) => {
   res.status(StatusCodes.NOT_FOUND).send("Ruta desconocida.");
