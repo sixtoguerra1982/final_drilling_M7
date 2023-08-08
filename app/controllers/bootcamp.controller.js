@@ -19,7 +19,7 @@ const createBootcamp = async (bootcamp) => {
     }
 }
 
-const findById = async (id) => {
+const findBootcampById = async (id) => {
     try {
         const bootcampResponse = await Bootcamp.findByPk(id, {include: [
             {
@@ -65,7 +65,7 @@ const findAllBootcamp = async () => {
     }
 }
 
-const addUser = async (bootcampId, userId) => {
+const addUserToBootcamp = async (bootcampId, userId) => {
     try {
         const bootcamp = await Bootcamp.findByPk(bootcampId);
         if (!bootcamp) {
@@ -86,4 +86,4 @@ const addUser = async (bootcampId, userId) => {
     }
 }
 
-module.exports = { createBootcamp, findById, findAllBootcamp , addUser }
+module.exports = { createBootcamp, findBootcampById, findAllBootcamp , addUserToBootcamp }

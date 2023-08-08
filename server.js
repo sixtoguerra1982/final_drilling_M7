@@ -5,8 +5,8 @@ const PORT = process.env.PORT;
 const { StatusCodes } = require('http-status-codes');
 
 // IMPORTAR CONTROLADORES
-const { createUser, findAll, findUserById, updateUserById, deleteUserById } = require('./app/controllers/user.controller');
-const { createBootcamp, findById, findAllBootcamp, addUser } = require('./app/controllers/bootcamp.controller');
+const { createUser, findAllUser, findUserById, updateUserById, deleteUserById } = require('./app/controllers/user.controller');
+const { createBootcamp, findBootcampById, findAllBootcamp, addUserToBootcamp } = require('./app/controllers/bootcamp.controller');
 // MIDDELEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,10 +23,14 @@ app.post('/user/', async (req, res) => {
   try {
     if (req.query.first_name && req.query.last_name && req.query.email) {
       const user = await createUser(req.query);
-      res.status(StatusCodes.CREATED).json({
-        message: `usuario ${user.email} fue creado con éxito`,
-        user
-      });
+      if (user.message) {
+        res.status(StatusCodes.BAD_REQUEST).json(user);
+      } else {
+        res.status(StatusCodes.CREATED).json({
+          message: `usuario ${user.email} fue creado con éxito`,
+          user
+        });
+      }
     } else {
       res.status(StatusCodes.BAD_REQUEST)
         .json({ message: `Query Params de Entrada, Insufucientes (first_name, last_name, email )` });
@@ -41,7 +45,7 @@ app.post('/user/', async (req, res) => {
 // http://localhost:3000/users/
 app.get('/users/', async (req, res) => {
   try {
-    const users = await findAll();
+    const users = await findAllUser();
     res.json(users)
   } catch (error) {
     console.log(error)
@@ -49,6 +53,7 @@ app.get('/users/', async (req, res) => {
   }
 })
 
+//  -> SEARCH BY USERS <-
 // http://localhost:3000/user/:id
 app.get('/user/:id', async (req, res) => {
   try {
@@ -61,6 +66,7 @@ app.get('/user/:id', async (req, res) => {
   }
 })
 
+//  -> UPDATE USER <-
 // http://localhost:3000/user/:id
 app.put('/user/:id', async (req, res) => {
   try {
@@ -97,6 +103,8 @@ app.put('/user/:id', async (req, res) => {
   }
 })
 
+
+//  -> DELETE USER BY ID <-
 // http://localhost:3000/user/:id
 app.delete('/user/:id', async (req, res) => {
   try {
@@ -120,6 +128,7 @@ app.delete('/user/:id', async (req, res) => {
   }
 })
 
+//  -> CREATE BOOTCAMP <-
 //  http://localhost:3000/bootcamp?title=JS27&cue=100&description=HTML, CCS, JS , POSTGRESQL
 app.post('/bootcamp/', async (req, res) => {
   try {
@@ -139,12 +148,12 @@ app.post('/bootcamp/', async (req, res) => {
   }
 });
 
-
+//  -> SEARCH BOOTCAMP BY ID
 // http://localhost:3000/bootcamp/:id
 app.get('/bootcamp/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const user = await findById(id);
+    const user = await findBootcampById(id);
     res.status((user.message) ? StatusCodes.NOT_FOUND : StatusCodes.OK ).json(user);
 
   } catch (error) {
@@ -154,7 +163,7 @@ app.get('/bootcamp/:id', async (req, res) => {
 }
 );
 
-
+//  -> INDEX BOOTCAMP <-
 // http://localhost:3000/bootcamps
 app.get('/bootcamps/', async (req, res) => {
   try {
@@ -166,12 +175,13 @@ app.get('/bootcamps/', async (req, res) => {
   }
 })
 
+// BOOTCAMP ADD TO USER
 // http://localhost:3000/bootcamp/adduser/idbootcamp/1/iduser/2
 app.post('/bootcamp/adduser/idbootcamp/:idBootcamp/iduser/:idUser', async (req, res) => {
   const idBootcamp = Number(req.params.idBootcamp);
   const idUser = Number(req.params.idUser); 
   try {
-      const bootcamp = await addUser(idBootcamp, idUser);
+      const bootcamp = await addUserToBootcamp(idBootcamp, idUser);
       if (bootcamp) {
         res.status(StatusCodes.CREATED).json({ 
             message: `Se agregó usuario id ${idUser} al bootcamp id ${idBootcamp}`,
@@ -185,8 +195,6 @@ app.post('/bootcamp/adduser/idbootcamp/:idBootcamp/iduser/:idUser', async (req, 
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 });
-
-
 
 app.all('*', (req, res) => {
   res.status(StatusCodes.NOT_FOUND).send("Ruta desconocida.");

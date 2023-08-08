@@ -5,20 +5,27 @@ const {
 
 const createUser = async (user) => {
     try {
-        const userResponse = await User.create({
-            firstName: user.first_name,
-            lastName: user.last_name,
-            email: user.email.toLowerCase()
-        });
-        console.log(`Se ha creado el usuario ${JSON.stringify(userResponse, null, 4)}`);
-        return userResponse;
+        const userfind = await User.findAll({where: {email: user.email.toLowerCase()}});
+        if (userfind[0] && userfind[0]['dataValues']) 
+        {
+            console.log(`email ${user.email.toLowerCase()} ya existe`)
+            return { message: `email ${user.email.toLowerCase()} ya existe` };
+        } else {
+            const userResponse = await User.create({
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email.toLowerCase()
+            });
+            console.log(`Se ha creado el usuario ${JSON.stringify(userResponse, null, 4)}`);
+            return userResponse;
+        }
     } catch (error) {
         console.error(error);
         throw error;
     }
 }
 
-const findAll = async () => {
+const findAllUser = async () => {
     try {
         const allUsers = await User.findAll({order: ['id'], 
             include: [
@@ -99,4 +106,4 @@ const deleteUserById = async (id) => {
     }
 }
 
-module.exports = { createUser, findAll, findUserById, updateUserById, deleteUserById }
+module.exports = { createUser, findAllUser, findUserById, updateUserById, deleteUserById }
