@@ -16,8 +16,7 @@ const Bootcamp = sequelize.define('bootcamp', {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-            min: 0,
-            max: 100
+            min: 0
           }
     },
     description: {
