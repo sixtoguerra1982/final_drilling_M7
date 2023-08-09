@@ -10,7 +10,7 @@ $ npm install
 ```
 1) Create environment variables by file ./.env.sample
 2) Create database named db_bootcamp in PostrgeSQL
-3) $npm run sync-db
+3) $ npm run sync-db
 ```
 
 | METHOD | END POINT | Function Controller | Method Model |
