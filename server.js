@@ -67,7 +67,7 @@ app.get('/user/:id', async (req, res) => {
 })
 
 //  -> UPDATE USER <-
-// http://localhost:3000/user/:id
+// http://localhost:3000/user/10?email=guerrasoft@gmail.com&first_name=Felipe&last_name=Guerra
 app.put('/user/:id', async (req, res) => {
   try {
     const id = Number(req.params.id);
